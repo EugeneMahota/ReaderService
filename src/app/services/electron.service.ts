@@ -9,8 +9,6 @@ export class ElectronService {
 
   private ipc: IpcRenderer;
 
-  code: EventEmitter<string> = new EventEmitter<string>();
-
   constructor() {
     if ((<any>window).require) {
       try {
@@ -21,31 +19,37 @@ export class ElectronService {
     } else {
       console.warn('Could not load electron ipc');
     }
-
-
-    this.getCode()
-      .then()
-      .catch();
   }
 
   async getCode() {
-    return new Promise<any>((resolve, reject) => {
-      setInterval(() => {
-        this.ipc.once('codeCardResponse', (event, arg) => {
-          if (arg.code) {
-            let code: string;
-            code = '';
-            for (let i = 0; arg.code.length > i; i++) {
-              code = code + (arg.code[i].toString(16).length === 1 ? '0' + arg.code[i].toString(16) : arg.code[i].toString(16));
-            }
-            this.code.emit(code);
-            resolve(arg);
-          }
-        });
-        this.ipc.send('codeCard');
-      }, 200);
+    return new Promise<string>((resolve, reject) => {
+      this.ipc.once('codeCard', (event, arg) => {
+        if (arg.code) {
+          resolve(this.hashCode(arg.code));
+        } else {
+          reject();
+        }
+      });
+      this.ipc.send('codeCard');
     });
   }
 
+  hashCode(code) {
+    let codeHash: string;
+    codeHash = '';
+    for (let i = 0; code.length > i; i++) {
+      codeHash = codeHash + (code[i].toString(16).length === 1 ? '0' + code[i].toString(16) : code[i].toString(16));
+    }
+    return codeHash.toUpperCase();
+  }
+
+  async getWiFi() {
+    return new Promise<any>((resolve, reject) => {
+      this.ipc.once('wi-fi', (event, arg) => {
+        resolve(arg);
+      });
+      this.ipc.send('wi-fi');
+    });
+  }
 
 }

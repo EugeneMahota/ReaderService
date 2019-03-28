@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+
 const mysql = (<any>window).require('mysql');
 
 @Injectable({
@@ -17,7 +18,13 @@ export class DatabaseService {
 
   constructor() {
     this.connection = mysql.createConnection(this.config);
-    this.connection.connect();
+    this.connection.connect(err => {
+      if (err) {
+        console.log('error connecting', err);
+      } else {
+        console.log('connection was a success ');
+      }
+    });
   }
 
 

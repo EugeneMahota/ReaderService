@@ -1,3 +1,4 @@
-<p>
-  setting works!
-</p>
+<button (click)="ngOnInit()">Update</button>
+<ul>
+  <li *ngFor="let wifi of listWiFi">{{wifi.ssid}}</li>
+</ul>

@@ -1,6 +1,7 @@
 import {app, BrowserWindow, ipcMain} from 'electron';
 import {init} from 'raspi';
 import {OneWire} from 'raspi-onewire';
+const piWifi = require('pi-wifi');
 import * as path from 'path';
 import * as url from 'url';
 
@@ -16,7 +17,7 @@ app.on('activate', () => {
 });
 
 function createWindow() {
-  win = new BrowserWindow({width: 800, height: 600});
+  win = new BrowserWindow({fullscreen: true});
 
   win.loadURL(
     url.format({
@@ -36,6 +37,12 @@ function createWindow() {
 ipcMain.on('codeCard', (event, arg) => {
   const bus = new OneWire();
   bus.searchForDevices((err, devices) => {
-    win.webContents.send('codeCardResponse', {code: devices[1], err: err});
+    event.sender.send('codeCard', {code: devices[1], err: err});
+  });
+});
+
+ipcMain.on('wi-fi', (event, arg) => {
+  piWifi.scan((err, networks) => {
+    event.sender.send('wi-fi', networks);
   });
 });
