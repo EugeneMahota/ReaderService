@@ -2,9 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var electron_1 = require("electron");
 var raspi_onewire_1 = require("raspi-onewire");
-var piWifi = require('pi-wifi');
 var path = require("path");
 var url = require("url");
+var os = require('os');
+var networkInterfaces = os.networkInterfaces();
+var fs = require('fs');
+var piWifi = require('pi-wifi');
+var network = require('network-config');
+var nodeCmd = require('node-cmd');
 var win;
 electron_1.app.on('ready', createWindow);
 electron_1.app.on('activate', function () {
@@ -33,6 +38,54 @@ electron_1.ipcMain.on('codeCard', function (event, arg) {
 electron_1.ipcMain.on('wi-fi', function (event, arg) {
     piWifi.scan(function (err, networks) {
         event.sender.send('wi-fi', networks);
+    });
+});
+electron_1.ipcMain.on('restartInterface', function (event, arg) {
+    piWifi.restartInterface('wlan0', function (err) {
+        if (err) {
+            event.sender.send('restartInterface', err.message);
+        }
+    });
+});
+electron_1.ipcMain.on('connect', function (event, arg) {
+    piWifi.connectTo(arg, function (err) {
+        if (err) {
+            event.sender.send('connect', err.message);
+        }
+    });
+});
+electron_1.ipcMain.on('disconnect', function (event, arg) {
+    piWifi.disconnect(function (err) {
+        if (err) {
+            event.sender.send('disconnect', err.message);
+        }
+    });
+});
+electron_1.ipcMain.on('readFile', function (event, arg) {
+    event.sender.send('readFile', 'file:///' + __dirname + '/public/audio.mp3');
+});
+electron_1.ipcMain.on('getIp', function (event, arg) {
+    event.sender.send('getIp', networkInterfaces);
+});
+electron_1.ipcMain.on('setIp', function (event, arg) {
+    network.configure('eth0', arg, function (err) {
+        event.sender.send('setIp', err);
+        nodeCmd.get('reboot', function () { });
+    });
+});
+electron_1.ipcMain.on('readAddress', function (event, arg) {
+    fs.readFile(__dirname + '/public/address', function (err, result) {
+        if (err) {
+            event.sender.send('readAddress', err);
+        }
+        else {
+            event.sender.send('readAddress', result);
+        }
+    });
+});
+electron_1.ipcMain.on('writeAddress', function (event, arg) {
+    fs.writeFile(__dirname + '/public/address', arg, function (err) {
+        event.sender.send('writeAddress', err);
     });
 });
 //# sourceMappingURL=main.js.map

@@ -6,7 +6,19 @@
   background-color: #43a047 !important;
 }
 
+.alert-warning {
+  background-color: #fb8c00 !important;
+}
+
 .alert {
   color: #FFFFFF !important;
   z-index: 99;
+  box-shadow: 0 2px 4px rgba(0,0,0,.2);
+  border-radius: 2px!important;
+  border: none!important;
+  font-size: 1.5rem!important;
+}
+
+.close {
+  color: #FFFFFF !important;
 }

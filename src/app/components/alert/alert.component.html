@@ -1,8 +1,17 @@
-<div class="ml-3 alert position-absolute" *ngIf="type" [@alert]
-     [ngClass]="type === 'success' ? 'alert-success':'alert-danger' &&
-                type === 'error' ? 'alert-danger':''">
+<div class="position-absolute pt-2 pl-2 pr-2 w-100">
+<div class="alert w-100 m-0" *ngIf="type" [@alert]
+     [ngClass]="type === 'success' ? 'alert-success':'' || type === 'error' ? 'alert-danger':'' || type === 'warning' ? 'alert-warning':''">
+  <div class="row">
+    <div class="col-8">
+      <h1 class="alert-heading font-weight-bold">
+        {{type === 'success' ? 'Успех!':'' || type === 'error' ? 'Ошибка!':'' || type === 'warning' ? 'Предупреждение!':''}}
+      </h1>
+    </div>
+    <div class="col-4 text-right">
+      <button type="button" class="close ml-3" (click)="delAlert()">x</button>
+    </div>
+  </div>
+  <hr>
   {{message}}
-  <button type="button" class="close" (click)="delAlert()">
-    <span aria-hidden="true">&times;</span>
-  </button>
+</div>
 </div>

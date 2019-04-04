@@ -1,9 +1,15 @@
 import {app, BrowserWindow, ipcMain} from 'electron';
 import {init} from 'raspi';
 import {OneWire} from 'raspi-onewire';
-const piWifi = require('pi-wifi');
 import * as path from 'path';
 import * as url from 'url';
+
+const os = require('os');
+const networkInterfaces = os.networkInterfaces();
+const fs = require('fs');
+const piWifi = require('pi-wifi');
+const network = require('network-config');
+const nodeCmd = require('node-cmd');
 
 let win: BrowserWindow;
 
@@ -44,5 +50,60 @@ ipcMain.on('codeCard', (event, arg) => {
 ipcMain.on('wi-fi', (event, arg) => {
   piWifi.scan((err, networks) => {
     event.sender.send('wi-fi', networks);
+  });
+});
+
+ipcMain.on('restartInterface', (event, arg) => {
+  piWifi.restartInterface('wlan0', (err) => {
+    if (err) {
+      event.sender.send('restartInterface', err.message);
+    }
+  });
+});
+
+ipcMain.on('connect', (event, arg) => {
+  piWifi.connectTo(arg, function (err) {
+    if (err) {
+      event.sender.send('connect', err.message);
+    }
+  });
+});
+
+ipcMain.on('disconnect', (event, arg) => {
+  piWifi.disconnect(function (err) {
+    if (err) {
+      event.sender.send('disconnect', err.message);
+    }
+  });
+});
+
+ipcMain.on('readFile', (event, arg) => {
+  event.sender.send('readFile', 'file:///' + __dirname + '/public/audio.mp3');
+});
+
+ipcMain.on('getIp', (event, arg) => {
+  event.sender.send('getIp', networkInterfaces);
+});
+
+ipcMain.on('setIp', (event, arg) => {
+  network.configure('eth0', arg, (err) => {
+    event.sender.send('setIp', err);
+    nodeCmd.get('reboot', () => {});
+  });
+});
+
+ipcMain.on('readAddress', (event, arg) => {
+  fs.readFile(__dirname + '/public/address', (err, result) => {
+    if (err) {
+      event.sender.send('readAddress', err);
+    } else {
+      event.sender.send('readAddress', result);
+    }
+  });
+});
+
+ipcMain.on('writeAddress', (event, arg) => {
+  fs.writeFile(__dirname + '/public/address', arg, (err) => {
+    event.sender.send('writeAddress', err);
   });
 });

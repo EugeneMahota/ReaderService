@@ -9,14 +9,14 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
   animations: [
     trigger('alert', [
       state('void', style({
-        opacity: 0.5,
-        marginLeft: '-100px'
+        opacity: 0.3,
+        height: '0'
       })),
       state('*', style({
         opacity: 1,
-        marginLeft: '0'
+        height: 'auto'
       })),
-      transition('void=>*, *=>void', animate('350ms ease-in-out'))
+      transition('void=>*, *=>void', animate('400ms ease-in-out'))
     ])
   ]
 })

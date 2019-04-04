@@ -1,0 +1,12 @@
+.menu {
+  display: flex;
+  overflow-x: auto;
+}
+
+.flex {
+  white-space: nowrap;
+}
+
+.active {
+  background-color: purple;
+}

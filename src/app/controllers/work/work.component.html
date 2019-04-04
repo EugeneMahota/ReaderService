@@ -1,28 +1,30 @@
 <div class="container">
   <div class="row m-1 mt-2">
     <div class="col-6 pl-0">
-      <h5>Аттракцион имя волшебное</h5>
-      <div class="text-muted">Цена 1200руб/1200бон.</div>
+      <h4>{{itemAttr.name || 'Аттракцион отсутствует'}}</h4>
+      <h5 class="text-muted" *ngIf="itemAttr.price && itemAttr.bonus">Цена {{itemAttr.price}}руб/{{itemAttr.bonus}}бон</h5>
       <div class="dropdown-divider"></div>
       <div class="display-1 text-center font-weight-bold">
         {{quantityPass}}
       </div>
+      <h5 class="text-center">Кол-во проходов</h5>
     </div>
     <div class="col-6">
       <div class="row">
         <div class="col-4 mt-2 pl-1 pr-1" *ngFor="let number of [1,2,3,4,5,6,7,8,9]; let i = index">
-          <button class="btn btn-lg w-100" (click)="setQuantityPass(number)" [ngClass]="quantityPass === number ? 'btn-primary':'btn-secondary'">{{i+1}}</button>
+          <button class="btn btn-lg pt-3 pb-3 w-100" (click)="setQuantityPass(number); inputPin(number)" [ngClass]="quantityPass === number ? 'btn-primary':'btn-secondary'">{{i+1}}</button>
         </div>
         <div class="col-4 mt-2 pl-1 pr-1">
-          <button class="btn btn-lg btn-secondary w-100"><</button>
+          <button class="btn btn-lg pt-3 pb-3 btn-secondary w-100" (click)="nextAttr('-')"><</button>
         </div>
         <div class="col-4 mt-2 pl-1 pr-1">
-          <button class="btn btn-lg btn-secondary w-100">0</button>
+          <button class="btn btn-lg pt-3 pb-3 btn-secondary w-100" (click)="ngOnInit()">0</button>
         </div>
         <div class="col-4 mt-2 pl-1 pr-1">
-          <button class="btn btn-lg btn-secondary w-100">></button>
+          <button class="btn btn-lg pt-3 pb-3 btn-secondary w-100" (click)="clearPin(); nextAttr('+')">></button>
         </div>
       </div>
     </div>
   </div>
 </div>
+<audio src="{{audio}}" id="audio"></audio>

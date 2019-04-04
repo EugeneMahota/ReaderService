@@ -18,9 +18,14 @@ export class DatabaseService {
 
   constructor() {
     this.connection = mysql.createConnection(this.config);
+    this.connectionDB();
+  }
+
+  connectionDB() {
     this.connection.connect(err => {
       if (err) {
         console.log('error connecting', err);
+        this.connectionDB();
       } else {
         console.log('connection was a success ');
       }
@@ -35,6 +40,18 @@ export class DatabaseService {
           reject(err);
         } else {
           resolve(result[0][0]);
+        }
+      });
+    });
+  }
+
+  async queryArray(sql: string, data: any) {
+    return new Promise<any>((resolve, reject) => {
+      this.connection.query(sql, data, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result[0]);
         }
       });
     });

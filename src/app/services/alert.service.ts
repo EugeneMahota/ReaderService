@@ -20,7 +20,7 @@ export class AlertService {
     clearInterval(this.timeout);
     this.timeout = setTimeout(() => {
       this.delAlert();
-    }, 2000);
+    }, 5000);
   }
 
   delAlert() {

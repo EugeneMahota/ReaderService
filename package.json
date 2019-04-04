@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "electron": "ng build --base-href ./ && tsc --p electron && electron ."
+    "electron": "ng build --base-href ./ && tsc --p electron && electron .",
+    "electron-prod": "ng build --prod --build-optimizer --base-href ./ && tsc --p electron && electron ."
   },
   "private": true,
   "dependencies": {
@@ -25,6 +26,7 @@
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "mysql": "^2.16.0",
+    "network-config": "^2.0.0",
     "pi-wifi": "^1.2.0",
     "rxjs": "~6.2.0",
     "zone.js": "~0.8.26"
@@ -40,6 +42,7 @@
     "@types/node": "~8.9.4",
     "codelyzer": "~4.3.0",
     "electron": "^4.1.1",
+    "electron-packager": "^13.1.1",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "^4.0.1",

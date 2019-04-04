@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ElectronService} from '../../services/electron.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-setting',
@@ -8,20 +8,24 @@ import {ElectronService} from '../../services/electron.service';
 })
 export class SettingComponent implements OnInit {
 
-  listWiFi: any[] = [];
-
-  constructor(private electronService: ElectronService) {
+  constructor(private router: Router) {
   }
 
   ngOnInit() {
-    this.electronService.getWiFi()
-      .then(res => {
-        this.listWiFi = res;
-        console.log(res);
-      })
-      .catch(res => {
-        console.log(res);
-      });
+
   }
 
+  onBack() {
+    this.router.navigate(['work']);
+  }
+
+  scrollMenu(value) {
+    let menu = document.getElementById('menu');
+    if (value) {
+      menu.scrollBy({left: 100, behavior: 'smooth'});
+    }
+    if (!value) {
+      menu.scrollBy({left: -100, behavior: 'smooth'});
+    }
+  }
 }
