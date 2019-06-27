@@ -25,7 +25,6 @@ export class DatabaseService {
     this.connection.connect(err => {
       if (err) {
         console.log('error connecting', err);
-        this.connectionDB();
       } else {
         console.log('connection was a success ');
       }

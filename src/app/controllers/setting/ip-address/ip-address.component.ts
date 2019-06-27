@@ -11,11 +11,11 @@ export class IpAddressComponent implements OnInit {
 
   ipConfig = {
     ip: '',
-    netmask: '255.255.255.0',
-    gateway: '192.168.252.1'
+    netmask: '',
+    gateway: ''
   };
 
-  ipAdress: string;
+  inputActive: string = 'ip';
 
   constructor(private electronService: ElectronService, private alertService: AlertService) {
   }
@@ -23,8 +23,9 @@ export class IpAddressComponent implements OnInit {
   ngOnInit() {
     this.electronService.getIp()
       .then(res => {
-        console.log(res);
-        this.ipAdress = res['eth0'][0]['address'];
+        this.ipConfig.ip = res['eth0'][0]['address'];
+        this.ipConfig.netmask = res['eth0'][0]['netmask'];
+        this.ipConfig.gateway = res['eth0'][0]['address'].match(/\d{1,3}\.\d{1,3}\.\d{1,3}\./g) + '1';
       })
       .catch(error => {
         this.alertService.onAlert('error', error.message);
@@ -32,11 +33,18 @@ export class IpAddressComponent implements OnInit {
   }
 
   inputIp(value) {
-    this.ipAdress = this.ipAdress + value;
+    if (this.inputActive === 'ip') {
+      this.ipConfig.ip = this.ipConfig.ip + value;
+    }
+    if (this.inputActive === 'netmask') {
+      this.ipConfig.netmask = this.ipConfig.netmask + value;
+    }
+    if (this.inputActive === 'gateway') {
+      this.ipConfig.gateway = this.ipConfig.gateway + value;
+    }
   }
 
   setIp() {
-    this.ipConfig.ip = this.ipAdress;
     this.electronService.setIp(this.ipConfig)
       .then(res => {
         this.alertService.onAlert('warning', res);
@@ -47,6 +55,18 @@ export class IpAddressComponent implements OnInit {
   }
 
   clearIp() {
-    this.ipAdress = this.ipAdress.substring(0, this.ipAdress.length - 1);
+    if (this.inputActive === 'ip') {
+      this.ipConfig.ip = this.ipConfig.ip.substring(0, this.ipConfig.ip.length - 1);
+    }
+    if (this.inputActive === 'netmask') {
+      this.ipConfig.netmask = this.ipConfig.netmask.substring(0, this.ipConfig.netmask.length - 1);
+    }
+    if (this.inputActive === 'gateway') {
+      this.ipConfig.gateway = this.ipConfig.gateway.substring(0, this.ipConfig.gateway.length - 1);
+    }
+  }
+
+  selectedEdit(value) {
+    this.inputActive = value;
   }
 }

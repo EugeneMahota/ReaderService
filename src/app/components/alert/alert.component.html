@@ -1,17 +1,38 @@
+<!--<div class="position-absolute pt-2 pl-2 pr-2 w-100">-->
+  <!--<div class="alert w-100 m-0" *ngIf="type && message" [@alert]-->
+       <!--[ngClass]="type === 'success' ? 'alert-success':'' || type === 'error' ? 'alert-danger':'' || type === 'warning' ? 'alert-warning':''">-->
+    <!--<div class="row">-->
+      <!--<div class="col-8">-->
+        <!--<h1 class="alert-heading font-weight-bold">-->
+          <!--{{type === 'success' ? 'Успех!':'' || type === 'error' ? 'Ошибка!':'' || type === 'warning' ?-->
+          <!--'Предупреждение!':''}}-->
+        <!--</h1>-->
+      <!--</div>-->
+      <!--<div class="col-4 text-right">-->
+        <!--<button type="button" class="close ml-3" (click)="delAlert()">x</button>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<hr>-->
+    <!--{{message}}-->
+  <!--</div>-->
+<!--</div>-->
+
+
 <div class="position-absolute pt-2 pl-2 pr-2 w-100">
-<div class="alert w-100 m-0" *ngIf="type" [@alert]
-     [ngClass]="type === 'success' ? 'alert-success':'' || type === 'error' ? 'alert-danger':'' || type === 'warning' ? 'alert-warning':''">
-  <div class="row">
-    <div class="col-8">
-      <h1 class="alert-heading font-weight-bold">
-        {{type === 'success' ? 'Успех!':'' || type === 'error' ? 'Ошибка!':'' || type === 'warning' ? 'Предупреждение!':''}}
-      </h1>
+  <div *ngFor="let alert of listAlert" class="alert w-100 m-0 mb-2" [@alert]
+       [ngClass]="alert.type === 'success' ? 'alert-success':'' || alert.type === 'error' ? 'alert-danger':'' || alert.type === 'warning' ? 'alert-warning':''">
+    <div class="row">
+      <div class="col-8">
+        <h1 class="alert-heading font-weight-bold">
+          {{alert.type === 'success' ? 'Успех!':'' || alert.type === 'error' ? 'Ошибка!':'' || alert.type === 'warning' ?
+          'Предупреждение!':''}}
+        </h1>
+      </div>
+      <div class="col-4 text-right">
+        <button type="button" class="close ml-3" (click)="delAlertItem()">x</button>
+      </div>
     </div>
-    <div class="col-4 text-right">
-      <button type="button" class="close ml-3" (click)="delAlert()">x</button>
-    </div>
+    <hr>
+    {{alert.message}}
   </div>
-  <hr>
-  {{message}}
-</div>
 </div>

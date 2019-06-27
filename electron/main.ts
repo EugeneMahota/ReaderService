@@ -33,7 +33,7 @@ function createWindow() {
     })
   );
 
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   win.on('closed', () => {
     win = null;
@@ -43,26 +43,26 @@ function createWindow() {
 ipcMain.on('codeCard', (event, arg) => {
   const bus = new OneWire();
   bus.searchForDevices((err, devices) => {
-    event.sender.send('codeCard', {code: devices[1], err: err});
+    if (!err) {
+      if (devices[1]) {
+        event.sender.send('codeCard', {code: devices[1], err: err});
+      } else {
+        event.sender.send('codeCard', {code: undefined, err: err});
+      }
+    }
   });
 });
 
 ipcMain.on('wi-fi', (event, arg) => {
   piWifi.scan((err, networks) => {
-    event.sender.send('wi-fi', networks);
-  });
-});
-
-ipcMain.on('restartInterface', (event, arg) => {
-  piWifi.restartInterface('wlan0', (err) => {
-    if (err) {
-      event.sender.send('restartInterface', err.message);
+    if (!err) {
+      event.sender.send('wi-fi', networks);
     }
   });
 });
 
 ipcMain.on('connect', (event, arg) => {
-  piWifi.connectTo(arg, function (err) {
+  piWifi.connect(arg.ssid, arg.password, function (err) {
     if (err) {
       event.sender.send('connect', err.message);
     }
@@ -88,7 +88,8 @@ ipcMain.on('getIp', (event, arg) => {
 ipcMain.on('setIp', (event, arg) => {
   network.configure('eth0', arg, (err) => {
     event.sender.send('setIp', err);
-    nodeCmd.get('reboot', () => {});
+    // nodeCmd.get('reboot', () => {
+    // });
   });
 });
 
@@ -105,5 +106,11 @@ ipcMain.on('readAddress', (event, arg) => {
 ipcMain.on('writeAddress', (event, arg) => {
   fs.writeFile(__dirname + '/public/address', arg, (err) => {
     event.sender.send('writeAddress', err);
+  });
+});
+
+ipcMain.on('temperature', (event, arg) => {
+  nodeCmd.get('vcgencmd measure_temp', (err, data) => {
+    event.sender.send('temperature', data);
   });
 });

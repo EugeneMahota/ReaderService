@@ -1,21 +1,22 @@
 <div class="container mt-2">
   <div class="row">
-    <div class="col-2 pl-1 pr-0">
-      <button class="btn btn-outline-dark btn-sm" (click)="onBack()">Назад</button>
+    <div class="col-3 pl-1 pr-0">
+      <button class="btn btn-outline-dark" (click)="onBack()">Назад</button>
     </div>
-    <div class="col-10 pl-1">
+    <div class="col-9 pl-1">
       <div class="row">
         <div class="col-2 pr-1 pl-1">
-          <button class="btn w-100 btn-secondary btn-sm" (click)="scrollMenu(false)"><<</button>
+          <button class="btn w-100 btn-secondary" (click)="scrollMenu(false)"><<</button>
         </div>
         <div class="col-8 menu pl-0 pr-0 pb-2" id="menu">
-            <button class="btn btn-dark flex btn-sm d-inline" routerLinkActive="active" routerLink="wi-fi">WiFi</button>
-            <button class="btn btn-dark flex btn-sm ml-1 d-inline" routerLinkActive="active" routerLink="ip-address">IP адрес</button>
-            <button class="btn btn-dark flex btn-sm ml-1 d-inline" routerLinkActive="active" routerLink="address">Адрес считывателя</button>
-            <button class="btn btn-dark flex btn-sm ml-1 d-inline" routerLinkActive="active" routerLink="color">Тестирование экрана</button>
+            <button class="btn btn-dark flex d-inline" routerLinkActive="active" routerLink="wi-fi">WiFi</button>
+            <button class="btn btn-dark flex ml-1 d-inline" routerLinkActive="active" routerLink="ip-address">IP адрес</button>
+            <button class="btn btn-dark flex ml-1 d-inline" routerLinkActive="active" routerLink="address">Адрес считывателя</button>
+            <button class="btn btn-dark flex ml-1 d-inline" routerLinkActive="active" routerLink="temp">Температура</button>
+            <button class="btn btn-dark flex ml-1 d-inline" routerLinkActive="active" routerLink="desktop-test">Тестирование экрана</button>
         </div>
         <div class="col-2 pl-1 pr-1 w-auto text-right">
-          <button class="btn w-100 btn-secondary btn-sm" (click)="scrollMenu(true)">>></button>
+          <button class="btn w-100 btn-secondary" (click)="scrollMenu(true)">>></button>
         </div>
       </div>
     </div>

@@ -52,15 +52,6 @@ export class ElectronService {
     });
   }
 
-  async restartInterface() {
-    return new Promise<any>((resolve, reject) => {
-      this.ipc.once('restartInterface', (event, arg) => {
-        resolve(arg);
-      });
-      this.ipc.send('restartInterface');
-    });
-  }
-
   async connectWiFi(dataConnect) {
     return new Promise<any>((resolve, reject) => {
       this.ipc.once('connect', (event, arg) => {
@@ -122,6 +113,19 @@ export class ElectronService {
       });
       this.ipc.send('writeAddress', JSON.stringify(address));
     });
+  }
+
+  async getTemp() {
+    return new Promise<any>((resolve, reject) => {
+      this.ipc.once('temperature', (event, arg) => {
+        resolve(arg);
+      });
+      this.ipc.send('temperature');
+    });
+  }
+
+  reboot() {
+    this.ipc.send('reboot');
   }
 
 }

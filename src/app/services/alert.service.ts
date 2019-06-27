@@ -5,6 +5,10 @@ import {EventEmitter, Injectable} from '@angular/core';
 })
 export class AlertService {
 
+  listAlert: any[] = [];
+  listAlertEvent: EventEmitter<any> = new EventEmitter<any>();
+  timeoutDel: any;
+
   message: EventEmitter<string> = new EventEmitter<string>();
   type: EventEmitter<string> = new EventEmitter<string>();
 
@@ -26,5 +30,21 @@ export class AlertService {
   delAlert() {
     this.type.emit(null);
     this.message.emit(null);
+  }
+
+  onAlertList(type: string, message: string) {
+    this.listAlert.push({type: type, message: message});
+    this.listAlertEvent.emit(this.listAlert);
+
+    // clearInterval(this.timeoutDel);
+    this.timeoutDel = setTimeout(() => {
+      this.delAlertItem();
+    }, 4000);
+  }
+
+  delAlertItem() {
+    let index: number = this.listAlert.length;
+    this.listAlert.splice(-1, 1);
+    this.listAlertEvent.emit(this.listAlert);
   }
 }

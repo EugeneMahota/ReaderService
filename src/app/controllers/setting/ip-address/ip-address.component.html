@@ -1,7 +1,28 @@
 <div class="container">
   <div class="row">
     <div class="col-10 mt-2 pl-1 pr-1">
-      <input [(ngModel)]="ipAdress" class="form-control form-control-lg" placeholder="Ip адрес">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text text-input">Ip адрес</span>
+        </div>
+      <input [(ngModel)]="ipConfig.ip" (focus)="selectedEdit('ip')" id="ip" name="ip" class="form-control" placeholder="Ip адрес">
+      </div>
+    </div>
+    <div class="col-10 mt-2 pl-1 pr-1">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text text-input">Маска подсети</span>
+        </div>
+      <input [(ngModel)]="ipConfig.netmask" (focus)="selectedEdit('netmask')" id="netmask" name="netmask" class="form-control" placeholder="Маска подсети">
+      </div>
+    </div>
+    <div class="col-10 mt-2 pl-1 pr-1">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text text-input">Основной шлюз</span>
+        </div>
+      <input [(ngModel)]="ipConfig.gateway" (focus)="selectedEdit('gateway')" id="gateway" name="gateway" class="form-control" placeholder="Основной шлюз">
+      </div>
     </div>
     <div class="col-2 mt-2 pl-1 pr-1">
       <button class="btn btn-lg btn-secondary w-100" (click)="setIp()">Ok</button>

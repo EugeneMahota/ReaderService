@@ -9,7 +9,7 @@
           <td class="text-center">{{i+1}}</td>
           <td>{{wifi.ssid}}</td>
           <td class="text-center">
-            <button class="btn btn-sm" (click)="connectTo(wifi.ssid)">Подключиться</button>
+            <button class="btn btn-sm" routerLink="{{wifi.ssid}}">Подключиться</button>
           </td>
         </tr>
         </tbody>
@@ -18,7 +18,7 @@
     <div class="col-3">
       <button class="btn btn-secondary btn-sm mb-1" (click)="scrollTable(true)">Вверх</button><br/>
       <button class="btn btn-secondary btn-sm mb-1" (click)="scrollTable(false)">Вниз</button><br/>
-      <button class="btn btn-secondary btn-sm mb-1" (click)="ngOnInit(); restartInterface();">Обновить</button><br/>
+      <button class="btn btn-secondary btn-sm mb-1" (click)="ngOnInit()">Обновить</button><br/>
       <button class="btn btn-secondary btn-sm mb-1" (click)="disconnectWifi()">Отключ.</button><br/>
     </div>
   </div>

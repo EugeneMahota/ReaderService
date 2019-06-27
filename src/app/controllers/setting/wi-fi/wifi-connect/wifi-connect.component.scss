@@ -1,0 +1,9 @@
+$border-radius: 0;
+
+.btn {
+  border-radius: $border-radius;
+  width: 38px;
+}
+.form-control {
+  border-radius: $border-radius;
+}

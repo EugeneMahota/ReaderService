@@ -6,6 +6,7 @@ import {AlertService} from '../../services/alert.service';
 import {Attr} from '../../models/attr';
 
 const pinCode = '1488';
+const pinCodeReboot = '2703';
 
 @Component({
   selector: 'app-work',
@@ -28,6 +29,7 @@ export class WorkComponent implements OnInit, OnDestroy {
   audio;
 
   readCode: boolean = true;
+
   constructor(private electronService: ElectronService, private db: DatabaseService, private router: Router, private alert: AlertService) {
     this.interval = setInterval(() => {
       this.electronService.getCode()
@@ -82,30 +84,47 @@ export class WorkComponent implements OnInit, OnDestroy {
       this.codeCard = code;
       this.db.query('CALL pass(?,?,?)', [this.codeCard, this.itemAttr.id, this.quantityPass])
         .then(res => {
+          console.log(res);
           this.quantityPass = 1;
           this.clearCode();
           if (res['status'] === 1) {
             this.audioPlay();
-            this.alert.onAlert('success', 'Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+            this.alert.onAlertList('success', 'Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
           } else if (res['status'] === 2) {
-            this.alert.onAlert('error', 'Аттракцион не найден. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+            this.alert.onAlertList('error', 'Аттракцион не найден. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
           } else if (res['status'] === 3) {
-            this.alert.onAlert('error', 'Недостаточно средств. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+            this.alert.onAlertList('error', 'Недостаточно средств. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
           } else if (res['status'] === 4) {
-            this.alert.onAlert('error', 'Карта не заведена. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+            this.alert.onAlertList('error', 'Карта не заведена. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
           } else if (res['status'] === 5) {
-            this.alert.onAlert('error', 'Цена не найдена или некорректная. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+            this.alert.onAlertList('error', 'Цена не найдена или некорректная. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
           } else if (res['status'] === 6) {
-            this.alert.onAlert('error', 'Проход запрещен(тип:проверка баланса). Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+            this.alert.onAlertList('error', 'Проход запрещен(тип:проверка баланса). Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
           } else if (res['status'] === 7) {
-            this.alert.onAlert('error', 'Карта заблокирована. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+            this.alert.onAlertList('error', 'Карта заблокирована. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
           } else if (res['status'] === 8) {
-            this.alert.onAlert('error', 'Ошибка БД. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+            this.alert.onAlertList('error', 'Ошибка БД. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+          } else if (res['status'] === 11) {
+            this.alert.onAlertList('success', 'Абонемент активирован. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+          } else if (res['status'] === 12) {
+            this.alert.onAlertList('error', 'Абонемент уже активирован. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+          } else if (res['status'] === 13) {
+            this.alert.onAlertList('error', 'Срок действия абонимента закончился. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+          } else if (res['status'] === 14) {
+            this.alert.onAlertList('error', 'Необходимо активировать абонимент. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+          } else if (res['status'] === 16) {
+            this.alert.onAlertList('error', 'Необходима доплата: ' + res['money_n'] + 'руб');
+          } else if (res['status'] === 15) {
+            this.alert.onAlertList('error', 'Необходимо войти. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+          } else if (res['status'] === 17) {
+            this.alert.onAlertList('error', 'Отсутствует время. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
+          } else if (res['status'] === 18) {
+            this.alert.onAlertList('error', 'Неверный тип карты. Остаток на карте: ' + res['money_n'] + 'руб' + ', ' + res['money_b'] + 'бон');
           }
         })
         .catch(err => {
           this.quantityPass = 1;
-          this.alert.onAlert('error', err.message);
+          this.alert.onAlertList('error', err.message);
         });
     }
   }
@@ -152,6 +171,9 @@ export class WorkComponent implements OnInit, OnDestroy {
     if (this.changePinCode.length <= 4) {
       if (this.changePinCode === pinCode) {
         this.router.navigate(['setting']);
+      }
+      if (this.changePinCode === pinCodeReboot) {
+        this.electronService.reboot();
       }
     } else {
       this.changePinCode = '';
