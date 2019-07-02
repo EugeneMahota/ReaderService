@@ -17,7 +17,7 @@ const routes: Routes = [
 
       {path: '', redirectTo: 'wi-fi', pathMatch: 'full'},
 
-      {path: 'ip-address', component: IpAddressComponent},
+      {path: 'ip-address.json', component: IpAddressComponent},
       {path: 'address', component: AddressComponent},
       {path: 'wi-fi', component: WiFiComponent},
       {path: 'desktop-test', component: DesktopTestComponent},

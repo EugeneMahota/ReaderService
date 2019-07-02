@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {IpcRenderer} from 'electron';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -126,6 +125,15 @@ export class ElectronService {
 
   reboot() {
     this.ipc.send('reboot');
+  }
+
+  async getDataUsbZ() {
+    return new Promise((resolve, reject) => {
+      this.ipc.once('usbZ', (event, arg) => {
+        resolve(arg);
+      });
+      this.ipc.send('usbZ');
+    });
   }
 
 }

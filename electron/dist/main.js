@@ -24,7 +24,7 @@ function createWindow() {
         protocol: 'file:',
         slashes: true
     }));
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools();
     win.on('closed', function () {
         win = null;
     });
@@ -72,12 +72,12 @@ electron_1.ipcMain.on('getIp', function (event, arg) {
 electron_1.ipcMain.on('setIp', function (event, arg) {
     network.configure('eth0', arg, function (err) {
         event.sender.send('setIp', err);
-        // nodeCmd.get('reboot', () => {
-        // });
+        nodeCmd.get('reboot', function () {
+        });
     });
 });
 electron_1.ipcMain.on('readAddress', function (event, arg) {
-    fs.readFile(__dirname + '/public/address', function (err, result) {
+    fs.readFile(__dirname + '/public/address.json', function (err, result) {
         if (err) {
             event.sender.send('readAddress', err);
         }
@@ -87,7 +87,7 @@ electron_1.ipcMain.on('readAddress', function (event, arg) {
     });
 });
 electron_1.ipcMain.on('writeAddress', function (event, arg) {
-    fs.writeFile(__dirname + '/public/address', arg, function (err) {
+    fs.writeFile(__dirname + '/public/address.json', arg, function (err) {
         event.sender.send('writeAddress', err);
     });
 });
@@ -96,4 +96,75 @@ electron_1.ipcMain.on('temperature', function (event, arg) {
         event.sender.send('temperature', data);
     });
 });
+electron_1.ipcMain.on('reboot', function (event, arg) {
+    nodeCmd.get('reboot', function () {
+        event.sender.send('reboot', '');
+    });
+});
+var SerialPort = require('serialport');
+var parsers = SerialPort.parsers;
+var parser = new parsers.Readline({
+    delimiter: '\n'
+});
+var port = new SerialPort('/dev/ttyUSB0');
+port.pipe(parser);
+port.on('open', function () {
+});
+electron_1.ipcMain.on('usbZ', function (event, arg) {
+    parser.on('data', function (data) {
+        if (data.toString() !== 'No card') {
+            event.sender.send('usbZ', hashCodeUsbZ(data.toString()));
+        }
+    });
+});
+var hashCodeUsbZ = function (code) {
+    var codeHash;
+    var strOne;
+    var strTwo;
+    var strThree;
+    strOne = +code.slice(20, 25);
+    strTwo = +code.slice(16, 19);
+    strThree = code.slice(10, 14);
+    strOne = strOne.toString(16);
+    strTwo = strTwo.toString(16);
+    strOne = addZero(strOne);
+    strTwo = addZero(strTwo);
+    strOne = replaceStr(strOne);
+    strTwo = replaceStr(strTwo);
+    codeHash = '01' + strOne + strTwo + strThree;
+    return codeHash.toUpperCase() + controlSum(codeHash).toUpperCase();
+};
+var addZero = function (str) {
+    if (str.length === 1) {
+        return '000' + str;
+    }
+    else if (str.length === 2) {
+        return '00' + str;
+    }
+    else if (str.length === 3) {
+        return '0' + str;
+    }
+    else {
+        return str;
+    }
+};
+var replaceStr = function (str) {
+    var strOne = str.slice(0, 2);
+    var strTwo = str.slice(2, 5);
+    return strTwo + strOne;
+};
+var controlSum = function (code) {
+    var crc = 0;
+    for (var i = 0; code.length > i; i += 2) {
+        var data = parseInt(code.slice(i, i + 2), 16);
+        for (var j = 0; 8 > j; j++) {
+            var mix = (crc ^ data) & 0x01;
+            crc = crc >> 1;
+            if (mix)
+                crc ^= 0x8C;
+            data = data >> 1;
+        }
+    }
+    return crc.toString(16);
+};
 //# sourceMappingURL=main.js.map

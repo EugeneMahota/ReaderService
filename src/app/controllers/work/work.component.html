@@ -1,30 +1,42 @@
 <div class="container">
   <div class="row m-1 mt-2">
-    <div class="col-6 pl-0">
-      <h4>{{itemAttr.name || 'Аттракцион отсутствует'}}</h4>
-      <h5 class="text-muted" *ngIf="itemAttr.price && itemAttr.bonus">Цена {{itemAttr.price}}руб/{{itemAttr.bonus}}бон</h5>
+    <div class="col-6 pl-0 mt-2">
+      <h5 class="font-weight-bold">{{activeAttr.display_name}}</h5>
       <div class="dropdown-divider"></div>
-      <div class="display-1 text-center font-weight-bold">
-        {{quantityPass}}
+      <h5 class="font-weight-light">Сумма на оплату</h5>
+      <div class="form-group mb-0 pb-0">
+        <div class="input-group">
+          <input type="text" class="form-control form-control-lg" [(ngModel)]="inputData" name="inputData" id="inputData">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary btn-lg" type="button" (click)="clearSum()"><</button>
+          </div>
+        </div>
       </div>
-      <h5 class="text-center">Кол-во проходов</h5>
+      <div class="dropdown-divider"></div>
+      <h5 class="font-weight-light text-muted">Аттракционы</h5>
+      <div class="row pr-2 pl-2">
+        <div class="col-3 mt-2 pl-1 pr-1" *ngFor="let attr of listAttr; let i = index">
+          <button class="btn btn-sm w-100" [ngClass]="activeAttr.atr_id === attr.attr_id ? 'btn-danger':'btn-warning'" (click)="getAttr(attr.attr_id)">{{i+1}}</button>
+        </div>
+      </div>
     </div>
     <div class="col-6">
       <div class="row">
         <div class="col-4 mt-2 pl-1 pr-1" *ngFor="let number of [1,2,3,4,5,6,7,8,9]; let i = index">
-          <button class="btn btn-lg pt-3 pb-3 w-100" (click)="setQuantityPass(number); inputPin(number)" [ngClass]="quantityPass === number ? 'btn-primary':'btn-secondary'">{{i+1}}</button>
+          <button class="btn btn-lg pt-3 pb-3 w-100 btn-secondary" (click)="inputSum(number)">
+            {{i+1}}
+          </button>
         </div>
         <div class="col-4 mt-2 pl-1 pr-1">
           <button class="btn btn-lg pt-3 pb-3 btn-secondary w-100" (click)="nextAttr('-')"><</button>
         </div>
         <div class="col-4 mt-2 pl-1 pr-1">
-          <button class="btn btn-lg pt-3 pb-3 btn-secondary w-100" (click)="ngOnInit(); inputPin(0);">0</button>
+          <button class="btn btn-lg pt-3 pb-3 btn-secondary w-100" (click)="inputSum(0);">0</button>
         </div>
         <div class="col-4 mt-2 pl-1 pr-1">
-          <button class="btn btn-lg pt-3 pb-3 btn-secondary w-100" (click)="clearPin(); nextAttr('+')">></button>
+          <button class="btn btn-lg pt-3 pb-3 btn-secondary w-100" (click)="nextAttr('+')">></button>
         </div>
       </div>
     </div>
   </div>
 </div>
-<audio src="{{audio}}" id="audio"></audio>
